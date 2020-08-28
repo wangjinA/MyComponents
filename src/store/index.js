@@ -3,17 +3,18 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-  cName: 'hyButton',
-  uName: '',
+  cName: 'hyButton', // 当前选中的【组件】类型
+  uName: '', // 当前选中的【util】类型
+  globalType: '组件库', // 当前显示类型
   hasSidebar: true,
-  sidebarItem: {}
+  sidebarItem: {},
 }
 
 const mutations = {}
 const notUpper = ['cName', 'uName'] // 不需要转换大写的key
 Object.keys(state).forEach(key => { // 直接获取state的keys，首字母转换成大写，前面拼接set，最终设置成mutations的key，
   let mutationKey = key
-  if(!notUpper.some(item=>item==key))
+  if (!notUpper.some(item => item == key))
     mutationKey = key.charAt(0).toUpperCase() + key.slice(1)
   mutations[`set${mutationKey}`] = function (state, value) {
     state[key] = value

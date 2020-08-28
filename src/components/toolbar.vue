@@ -2,63 +2,95 @@
  * @Author: 汪锦
  * @Date: 2020-06-17 17:37:26
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-06-19 17:11:38
+ * @LastEditTime: 2020-08-28 17:02:34
  * @Description: 工具栏
---> 
+-->
 <template>
   <div class="toolbar">
     <div @click="setHasSidebar(!hasSidebar)" class="hover">
       <Icon type="md-arrow-round-back" />
-      {{ hasSidebar ? 'TOOGLE' : 'TOOGLE' }}
+      {{ hasSidebar ? "TOOGLE" : "TOOGLE" }}
     </div>
     <div style="margin: 0 auto; font-size:20px;">组件库</div>
     <ul class="nav-ul">
-      <li @click="$bus.$emit('showC')">组件库</li>
-      <li @click="$bus.$emit('showU')">js库</li>
-      <li @click="navHandler">上传组件</li>
-      <li @click="outLogin">退出登录</li>
+      <!-- <li :class="{ active: globalType === 'echarts' }" @click="$bus.$emit('showE')">echarts</li>
+      <li :class="{ active: globalType === '组件库' }" @click="$bus.$emit('showC')">组件库</li>
+      <li :class="{ active: globalType === 'js库' }" @click="$bus.$emit('showU')">js库</li>
+      <li :class="{ active: globalType === '上传组件' }" @click="navHandler">上传组件</li> -->
+      <li
+        :class="{ active: globalType === item.name }"
+        v-for="(item, index) in list"
+        :key="index"
+        @click="navHandler(item)"
+      >
+        {{ item.name }}
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'toolbar',
+  name: "toolbar",
   data() {
     return {
-      
-    }
+      list: [
+        {
+          name: "echarts",
+        },
+        {
+          name: "组件库",
+        },
+        {
+          name: "js库",
+        },
+        {
+          name: "上传组件",
+        },
+        {
+          name: "退出登录",
+        },
+      ],
+    };
   },
   methods: {
-    outLogin() {
-      this.$router.push('/')
+    navHandler(item) {
+      this.setGlobalType(item.name);
     },
-    navHandler() {
-      this.$Message.warning({
-        background: true,
-        content: '别点我，还在开发',
-        duration: 2
-      });
-    }
-  }
-}
+    outLogin() {
+      this.$router.push("/");
+    },
+    // navHandler() {
+    //   this.$Message.warning({
+    //     background: true,
+    //     content: "别点我，还在开发",
+    //     duration: 2,
+    //   });
+    // },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-.toolbar{
+.toolbar {
   background-color: var(--main-500);
-  transition: padding .3s;
+  transition: padding 0.3s;
   padding: 0 16px;
   height: var(--toolbarHeight);
   display: flex;
   align-items: center;
   color: #fff;
-  .nav-ul{
+  .nav-ul {
     display: flex;
     user-select: none;
-    li{
-      margin: 0 20px;
-      .hover()
+    li {
+      margin: 0 5px;
+      padding: 5px 20px;
+      .hover();
+      &.active {
+        background: var(--main-400);
+        border-radius: 50px;
+      }
     }
   }
 }

@@ -2,9 +2,9 @@
  * @Author: 汪锦
  * @Date: 2020-06-17 17:22:19
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-06-19 14:15:16
+ * @LastEditTime: 2020-08-28 16:33:03
  * @Description: 文件描述
---> 
+-->
 <template>
   <div id="app">
     <router-view></router-view>
@@ -13,24 +13,27 @@
 
 <script>
 export default {
-  name: 'App',
-}
+  name: "App",
+};
 </script>
 
-
 <style lang="less">
-#app{
+#app {
   width: 100vw;
   height: 100vh;
 }
-body{
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-ul,li{
+ul,
+li {
   list-style: none;
 }
-*, ::after, ::before {
+*,
+::after,
+::before {
   box-sizing: border-box;
   border-width: 0;
   border-style: solid;
@@ -38,11 +41,11 @@ ul,li{
 }
 ::-webkit-scrollbar-thumb {
   background-color: #c7e0f9;
-  border-radius   : 4px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar {
-  width : 4px;
+  width: 4px;
   height: 4px;
 }
 

@@ -2,9 +2,9 @@
  * @Author: 汪锦
  * @Date: 2020-06-19 09:40:02
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-06-19 15:30:50
+ * @LastEditTime: 2020-08-28 16:24:30
  * @Description: 文件描述
---> 
+-->
 <template>
   <div class="code-view">
     <pre v-highlightjs="code">
@@ -12,7 +12,10 @@
     </pre>
     <div class="operations">
       <Tooltip content="下载组件(待完善)" placement="top" v-if="cName">
-        <a :href="`/api/download?cName=${cName}`"><Icon type="md-code-download" size="30"/></a>
+        <a :href="`/api/download?cName=${cName}.zip`" :download="`${cName}.zip`"
+          ><Icon type="md-code-download" size="30"
+        /></a>
+        <!-- <a @click="test"><Icon type="md-code-download" size="30"/></a> -->
       </Tooltip>
     </div>
   </div>
@@ -22,21 +25,21 @@
 export default {
   name: "codeView",
   props: {
-    code: String
+    code: String,
   },
   watch: {
     code: {
-      handler: "init"
-    }
+      handler: "init",
+    },
   },
   methods: {
     init() {
       // this.hljs.highlightBlock(this.$refs.code)
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 

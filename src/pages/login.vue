@@ -12,34 +12,45 @@
 </template>
 
 <script>
-import LoginForm from '@/components/login-form'
+import LoginForm from "@/components/login-form";
 export default {
   name: "login",
   components: {
-    LoginForm
+    LoginForm,
   },
   methods: {
     handleRegister({ userName, password }) {
-      this.$post('/api/register', {
-        userName,
-        password
-      }, true).then(res => {
-        if(res.status) {
-          // this.$router.push('/myC')
+      this.$post(
+        "/api/register",
+        {
+          userName,
+          password,
+        },
+        true
+      ).then((res) => {
+        console.log(res);
+        if (res.data.status) {
+          // this.$router.push("/myC");
         }
-      })
+      });
     },
-    handleSubmit ({ userName, password }) {
-      this.$post('/api/login', {
-        userName,
-        password
-      }, true).then(res => {
-        if(res.status) {
-          // this.$router.push('/myC')
+    handleSubmit({ userName, password }) {
+      this.$post(
+        "/api/login",
+        {
+          userName,
+          password,
+        },
+        true
+      ).then((res) => {
+        console.log(res);
+        if (res.status) {
+          localStorage.setItem("token", res.data.token);
+          this.$router.push("/myC");
         }
-      })
+      });
     },
-  }
+  },
 };
 </script>
 

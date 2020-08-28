@@ -1,58 +1,58 @@
 // 文本溢出
 .text-overflow {
-  overflow     : hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
-  white-space  : nowrap;
+  white-space: nowrap;
 }
 
 // 多行省略
 .text-overflow1(@line: 2) {
-  text-overflow     : -o-ellipsis-lastline;
-  overflow          : hidden;
-  text-overflow     : ellipsis;
-  display           : -webkit-box;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
   -webkit-line-clamp: @line;
-  line-clamp        : @line;
+  line-clamp: @line;
   -webkit-box-orient: vertical;
 }
 
 // 多行省略
 .text-overflow1 {
-  text-overflow     : -o-ellipsis-lastline;
-  overflow          : hidden;
-  text-overflow     : ellipsis;
-  display           : -webkit-box;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
   -webkit-line-clamp: 2;
-  line-clamp        : 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
 /*输入框*/
 .hy-input /deep/ .ivu-input-default,
 .hy-full-textarea /deep/ .ivu-input {
-  background   : transparent;
-  color        : #fff;
+  background: transparent;
+  color: #fff;
   border-radius: 0px;
-  font-size    : 20px;
-  border       : 1px solid #ffffff;
+  font-size: 20px;
+  border: 1px solid #ffffff;
 }
 
 .common.ivu-input-wrapper {
   /deep/ .ivu-input {
     background-color: rgba(164, 248, 255, 0.08);
-    border-color    : #00ccff;
-    box-shadow      : 0 0 6px 0px rgba(164, 248, 255, 0.5);
-    color           : #fff;
+    border-color: #00ccff;
+    box-shadow: 0 0 6px 0px rgba(164, 248, 255, 0.5);
+    color: #fff;
   }
 
   /deep/ .ivu-input-group-prepend {
-    width           : 80px;
+    width: 80px;
     background-color: transparent;
-    border-color    : #00ccff;
+    border-color: #00ccff;
     background-color: rgba(164, 248, 255, 0.08);
-    padding-left    : 0;
-    padding-right   : 0;
-    border-right    : 1px solid;
+    padding-left: 0;
+    padding-right: 0;
+    border-right: 1px solid;
 
     .ivu-select {
       color: #fff;
@@ -60,19 +60,18 @@
   }
 }
 
-
 // 表单【提交|返回】 椭圆按钮
 .oval-btn {
-  height       : 30px;
-  line-height  : 30px;
-  text-align   : center;
-  background   : #00bbef;
-  font-size    : 16px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  background: #00bbef;
+  font-size: 16px;
   border-radius: 30px;
-  width        : 90px;
-  margin       : 0 30px;
-  color        : #fff;
-  cursor       : pointer;
+  width: 90px;
+  margin: 0 30px;
+  color: #fff;
+  cursor: pointer;
 
   &:hover {
     opacity: 0.9;
@@ -81,24 +80,24 @@
 
 // 圆形
 .round(@size) {
-  width        : @size;
-  height       : @size;
+  width: @size;
+  height: @size;
   border-radius: 50%;
 }
 
 // 背景图设置
 .bg-style(@url) {
-  background-size    : 100% 100%;
+  background-size: 100% 100%;
   background-position: center center;
-  background-repeat  : no-repeat;
-  background-image   : url(@url);
+  background-repeat: no-repeat;
+  background-image: url(@url);
 }
 
 // flex居中
 .flex-center {
-  display        : flex;
+  display: flex;
   justify-content: center;
-  align-items    : center;
+  align-items: center;
 }
 
 .flex1 {
@@ -114,62 +113,60 @@
 }
 
 .flex-warp {
-  display  : flex;
+  display: flex;
   flex-wrap: wrap;
 }
 
 .space-between {
-  display        : flex;
+  display: flex;
   justify-content: space-between;
 }
 
 .flex-col {
   // flex主轴为Y
-  display       : flex;
+  display: flex;
   flex-direction: column;
 }
 
 // hover效果
 .hover {
   &:hover {
-    cursor : pointer;
-    opacity: .8;
+    cursor: pointer;
+    opacity: 0.8;
   }
 }
-
 
 // 上下左右为0
 .allAroundZero(@position: absolute, @distance: 0) {
   position: @position;
-  left    : @distance;
-  top     : @distance;
-  right   : @distance;
-  bottom  : @distance;
+  left: @distance;
+  top: @distance;
+  right: @distance;
+  bottom: @distance;
 }
 
 .resetInput {
   // 重置输入框
-  border          : none;
-  outline         : none;
+  border: none;
+  outline: none;
   background-color: transparent;
 }
 
 div[contenteditable] {
-  border    : none;
-  outline   : none;
+  border: none;
+  outline: none;
   word-break: break-word;
-  overflow  : auto;
+  overflow: auto;
 }
 
 .ivu-spin-fix {
   background-color: rgba(5, 26, 70, 0.8);
-  border          : none !important;
+  border: none !important;
 
   .ivu-spin-dot {
     background-color: #fff;
   }
 }
-
 
 .successColor {
   color: #01a001;
@@ -180,7 +177,7 @@ div[contenteditable] {
 }
 
 .infoColor {
-  color: #169BD5;
+  color: #169bd5;
 }
 
 .grayColor {
@@ -188,17 +185,17 @@ div[contenteditable] {
 }
 
 .not-data {
-  color           : #a4f8ff;
+  color: var(--main-500);
   background-color: transparent;
-  font-size       : 16px;
-  height          : 35px;
-  line-height     : 35px;
-  text-align      : center;
+  font-size: 16px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
 }
 
 .line-btn {
-  font-size      : 14px;
-  color          : #3cffe6;
+  font-size: 14px;
+  color: #3cffe6;
   text-decoration: underline;
   .hover();
 }

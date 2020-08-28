@@ -9,9 +9,10 @@ function getConnection(sql) {
         return reject('连接数据库出错')
       }
       connection.query(sql, (err, result) => {
+        console.log(result);
+        console.log(sql);
         if (err) {
           console.log(err);
-          console.log(sql);
           return reject('查询出错')
         }
         resolve(result)
@@ -27,7 +28,6 @@ function isRes(res) {
 module.exports = {
   login({ userName, password }) {
     let loginSql = `select * FROM  users WHERE userName='${userName}' AND password='${password}'`
-    console.log(loginSql);
     return getConnection(loginSql)
   },
   register({ userName, password }) {

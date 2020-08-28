@@ -22,62 +22,58 @@
 </template>
 <script>
 export default {
-  name: 'LoginForm',
+  name: "LoginForm",
   props: {
     userNameRules: {
       type: Array,
       default: () => {
-        return [
-          { required: true, message: '账号不能为空', trigger: 'blur' }
-        ]
-      }
+        return [{ required: true, message: "账号不能为空", trigger: "blur" }];
+      },
     },
     passwordRules: {
       type: Array,
       default: () => {
-        return [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
-        ]
-      }
-    }
+        return [{ required: true, message: "密码不能为空", trigger: "blur" }];
+      },
+    },
   },
-  data () {
+  data() {
     return {
       form: {
-        userName: 'admin',
-        password: '123'
-      }
-    }
+        userName: "1",
+        password: "2",
+      },
+    };
   },
   computed: {
-    rules () {
+    rules() {
       return {
         userName: this.userNameRules,
-        password: this.passwordRules
-      }
-    }
+        password: this.passwordRules,
+      };
+    },
   },
   methods: {
     handleReister() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.$emit('register', {
+          this.$emit("register", {
             userName: this.form.userName,
-            password: this.form.password
-          })
+            password: this.form.password,
+          });
         }
-      })
+      });
     },
-    handleSubmit () {
+    handleSubmit() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.$emit('login', {
+          this.$emit("login", {
             userName: this.form.userName,
-            password: this.form.password
-          })
+            password: this.form.password,
+          });
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>

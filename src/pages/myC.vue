@@ -1,5 +1,5 @@
 <template>
-  <div class="myC"  :class="{'has-sidebar': hasSidebar}">
+  <div class="myC" :class="{ 'has-sidebar': hasSidebar }">
     <toolbar />
     <sidebar />
     <main-content />
@@ -14,21 +14,20 @@ export default {
   components: {
     sidebar,
     toolbar,
-    mainContent
-  }
+    mainContent,
+  },
 };
 </script>
 
 <style lang="less">
-
-.has-sidebar{
-  .main{
+.has-sidebar {
+  .main {
     padding-left: var(--sidebarWidth);
   }
-  .toolbar{
+  .toolbar {
     padding: 0 16px 0 calc(var(--sidebarWidth) + 15px);
   }
-  .sidebar{
+  .sidebar {
     transform: translateX(0);
   }
 }
