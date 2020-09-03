@@ -3,9 +3,12 @@ const express = require('express');
 const router = express.Router()
 const path = require('path')
 const fs = require('fs')
-const { login, register } = require('../db')
+const { login, register, getEcharts, addEcharts, deleteEcharts } = require('../db')
 const { sign, verify } = require('../config/token')
-const compressing = require('compressing')
+const compressing = require('compressing');
+const { errorMonitor } = require('stream');
+
+
 // 登录
 router.post('/api/login', (req, res) => {
   if (!req.body.userName || !req.body.password) {
@@ -28,38 +31,30 @@ router.post('/api/login', (req, res) => {
     })
   }
 })
-// 验证token中间件
-// router.use((req, res, next) => {
-//   verify(req.headers.token).
-//     then(code => {
-//       next();
-//     }).catch(err => {
-//       res.status(304).send(new ErrorModel(err)).end()
-//     })
-// });
-router.get('/api/getCode', (req, res) => {
-  if (!req.query.cName && !req.query.uName) {
-    return res.send(new ErrorModel('cName和cName至少有一个！'))
-  }
-  let html = ''
-  if (req.query.cName)
-    html = fs.readFileSync(path.resolve(__dirname, `../../src/hyComponentsDemo/${req.query.cName}.vue`)).toString()
-  else if (req.query.uName)
-    html = fs.readFileSync(path.resolve(__dirname, `../../src/utilsDemo/${req.query.uName}.js`)).toString()
-  res.send(new SuccessModel({
-    code: html
-  }))
-})
 
-// /api/download?cName=hyButton
-router.get('/api/download', (req, res) => {
-  if (!req.query.cName) {
-    return res.send({
-      msg: 'cName不能为空！',
-      status: 0
+// 注册
+router.post('/api/register', (req, res) => {
+  if (!req.body.userName || !req.body.password) {
+    res.send(new ErrorModel('用户名和密码不能为空'))
+  } else {
+    register(req.body).then(result => {
+      if (result && result.affectedRows)
+        res.send(new SuccessModel('注册成功'))
+      else
+        res.send(new ErrorModel('注册失败，用户已存在'))
+    }).catch(err => {
+      res.send(new ErrorModel('注册失败，多半是后台崩了'))
     })
   }
-  let cName = req.query.cName.substring(0, req.query.cName.indexOf(".")) // 去除后缀
+})
+// /api/download?cName=hyButton
+router.get('/api/download', (req, res) => {
+  console.log('download');
+  let cName = req.query.cName
+  if (!cName) {
+    return res.send(new ErrorModel('cName不能为空！'))
+  }
+  cName = cName.substring(0, cName.indexOf(".")) // 去除后缀
   const tarStream = new compressing.tar.Stream();
   // tarStream.addEntry('dir/path/to/compress');
   tarStream.addEntry(path.resolve(__dirname, `../../src/hyComponents/${cName}`));
@@ -80,30 +75,66 @@ router.get('/api/download', (req, res) => {
   // res.download(path.resolve(__dirname, `../../src/hyComponents/${req.query.cName}/${req.query.cName}.vue`))
 })
 
-router.post('/api/register', (req, res) => {
-  if (!req.body.userName || !req.body.password) {
-    res.send({
-      msg: '用户名或密码不能为空',
-      status: 0
-    })
-  } else {
-    register(req.body).then(result => {
-      if (result && result.affectedRows)
-        res.send({
-          msg: '注册成功',
-          status: 1
-        })
-      else
-        res.send({
-          msg: '注册失败，用户已存在',
-          status: 0
-        })
+// 验证token中间件
+router.use('/api*', (req, res, next) => {
+  console.log('checkToken');
+  verify(req.headers.token).
+    then(code => {
+      next();
     }).catch(err => {
-      res.send({
-        msg: '注册失败，多半是后台崩了',
-        status: 0
-      })
+      console.log(err);
+      res.status(304).send(new ErrorModel(err)).end()
     })
+});
+// 获取示例代码
+router.get('/api/getCode', (req, res) => {
+  if (!req.query.cName && !req.query.uName) {
+    return res.send(new ErrorModel('cName和cName至少有一个！'))
   }
+  let html = ''
+  if (req.query.cName)
+    html = fs.readFileSync(path.resolve(__dirname, `../../src/hyComponentsDemo/${req.query.cName}.vue`)).toString()
+  else if (req.query.uName)
+    html = fs.readFileSync(path.resolve(__dirname, `../../src/utilsDemo/${req.query.uName}.js`)).toString()
+  res.send(new SuccessModel({
+    code: html
+  }))
+})
+// 获取echarts列表
+router.get('/api/getEcharts', (req, res) => {
+  console.log(req.query);
+  getEcharts(req.query)
+    .then(list => {
+      res.send(new SuccessModel(list))
+    }).catch(err => {
+      res.send(new ErrorModel(err))
+    })
+})
+// 添加echarts
+router.post('/api/addEcharts', async (req, res) => {
+  // console.log(req.body);
+  let userName = (await verify(req.headers.token)).userName
+  addEcharts({ ...req.body, userName })
+    .then(result => {
+      if (result && result.affectedRows)
+        res.send(new SuccessModel({}, '保存成功'))
+      else
+        res.send(new ErrorModel('保存失败'))
+    }).catch(err => {
+      res.send(new ErrorModel(err.toString()))
+    })
+})
+// 删除echarts
+router.post('/api/deleteEcharts', async (req, res) => {
+  let userName = (await verify(req.headers.token)).userName
+  deleteEcharts({ ...req.body, userName })
+    .then(result => {
+      if (result && result.affectedRows)
+        res.send(new SuccessModel({}, '删除成功'))
+      else
+        res.send(new ErrorModel('删除失败'))
+    }).catch(err => {
+      res.send(new ErrorModel(err.toString()))
+    })
 })
 module.exports = router

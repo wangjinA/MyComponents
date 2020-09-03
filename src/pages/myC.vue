@@ -26,6 +26,9 @@ export default {
   }
   .toolbar {
     padding: 0 16px 0 calc(var(--sidebarWidth) + 15px);
+    /deep/ .backIcon {
+      transform: rotate(0);
+    }
   }
   .sidebar {
     transform: translateX(0);

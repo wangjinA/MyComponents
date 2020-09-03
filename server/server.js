@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-06-19 09:54:14
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-06-19 11:25:35
+ * @LastEditTime: 2020-08-31 14:15:27
  * @Description: node-server
  */
 const express = require('express')
@@ -25,7 +25,9 @@ app.use(urlencodedParser)
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, '/public')))
+app.use(express.static(path.join(__dirname, '/public'), {
+  maxAge: '2h'
+}))
 
 app.use(routes)
 

@@ -16,7 +16,7 @@
     </FormItem>
     <FormItem>
       <Button @click="handleSubmit" type="primary" long>登录</Button>
-      <Button @click="handleReister" type="info" long>注册</Button>
+      <Button class="register-btn" @click="handleReister" type="info" long>注册</Button>
     </FormItem>
   </Form>
 </template>
@@ -40,8 +40,8 @@ export default {
   data() {
     return {
       form: {
-        userName: "1",
-        password: "2",
+        userName: "",
+        password: "",
       },
     };
   },
@@ -77,3 +77,9 @@ export default {
   },
 };
 </script>
+
+<style lang="less" scoped>
+.register-btn {
+  margin-top: 15px;
+}
+</style>

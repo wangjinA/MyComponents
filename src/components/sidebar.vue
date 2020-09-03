@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-06-17 17:26:53
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-08-28 17:15:43
+ * @LastEditTime: 2020-08-28 17:41:48
  * @Description: 侧边栏
 -->
 <template>
@@ -37,13 +37,7 @@ export default {
   methods: {
     itemClick(item) {
       this.setSidebarItem(item);
-      if (item.type === "util") {
-        this.setuName(item.cName);
-        this.setcName();
-      } else {
-        this.setcName(item.cName);
-        this.setuName();
-      }
+      this.setcName(item.cName);
     },
     showC() {
       this.$refs.sidebar.scrollTop = this.$refs.components[0].offsetTop - 10;

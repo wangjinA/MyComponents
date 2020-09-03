@@ -2,13 +2,13 @@
  * @Author: 汪锦
  * @Date: 2020-06-17 17:37:26
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-08-28 17:02:34
+ * @LastEditTime: 2020-09-01 10:31:25
  * @Description: 工具栏
 -->
 <template>
   <div class="toolbar">
     <div @click="setHasSidebar(!hasSidebar)" class="hover">
-      <Icon type="md-arrow-round-back" />
+      <Icon type="md-arrow-round-back backIcon" />
       {{ hasSidebar ? "TOOGLE" : "TOOGLE" }}
     </div>
     <div style="margin: 0 auto; font-size:20px;">组件库</div>
@@ -21,7 +21,7 @@
         :class="{ active: globalType === item.name }"
         v-for="(item, index) in list"
         :key="index"
-        @click="navHandler(item)"
+        @click="item.click ? item.click() : navHandler(item)"
       >
         {{ item.name }}
       </li>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import pageConfig from "@/config/pageConfig";
 export default {
   name: "toolbar",
   data() {
@@ -49,9 +50,30 @@ export default {
         },
         {
           name: "退出登录",
+          click: () => {
+            localStorage.setItem("token", "");
+            this.$router.push("/");
+          },
         },
       ],
     };
+  },
+  watch: {
+    globalType: {
+      handler(val) {
+        try {
+          if (val === "echarts") {
+            this.setHasSidebar(false);
+          } else {
+            this.setHasSidebar(true);
+          }
+          this.setcName(pageConfig[val].list[0].children[0].cName); // 切换导航 获取列表下第一个组件
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      immediate: true,
+    },
   },
   methods: {
     navHandler(item) {
@@ -80,6 +102,10 @@ export default {
   display: flex;
   align-items: center;
   color: #fff;
+  .backIcon {
+    transform: rotate(180deg);
+    transition: 0.3s;
+  }
   .nav-ul {
     display: flex;
     user-select: none;

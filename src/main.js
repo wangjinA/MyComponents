@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-06-17 17:22:19
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-06-19 15:31:16
+ * @LastEditTime: 2020-09-01 10:18:34
  * @Description: 文件描述
  */
 import Vue from 'vue'
@@ -25,6 +25,12 @@ Vue.use(axios)
 import 'highlight.js/styles/github.css';
 import VueHighlightJS from 'vue-highlightjs'
 Vue.use(VueHighlightJS)
+
+
+// echarts
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+window.$echarts = echarts
 
 
 import ViewUI from 'view-design';

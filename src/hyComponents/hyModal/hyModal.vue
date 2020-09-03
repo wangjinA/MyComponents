@@ -1,12 +1,22 @@
 <template>
   <div class="hyModal" v-transfer-dom :data-transfer="transfer">
     <transition name="hyModal-mask">
-      <div class="hyModal-mask" :style="setMaskStyles" v-show="visible" v-if="mask" @click="handleClickMask"></div>
+      <div
+        class="hyModal-mask"
+        :style="setMaskStyles"
+        v-show="visible"
+        v-if="mask"
+        @click="handleClickMask"
+      ></div>
     </transition>
     <transition name="hyModal">
       <template v-if="!showOrIf">
         <div class="hyModal-wrap" :style="mainStyles" v-if="visible">
-          <div class="hyModal-wrap-header" v-if="showHead" :style="{color: titleColor, borderBottom: titleStyle.borderBottom}">
+          <div
+            class="hyModal-wrap-header"
+            v-if="showHead"
+            :style="{ color: titleColor, borderBottom: titleStyle.borderBottom }"
+          >
             <slot name="header">
               <div class="hyModal-wrap-header-inner">{{ title }}</div>
             </slot>
@@ -16,21 +26,26 @@
               </slot>
             </a>
           </div>
-          <div class="hyModal-wrap-body" :class="{'no-header': !showHead  , 'hei88':footerHide}">
+          <div class="hyModal-wrap-body" :class="{ 'no-header': !showHead, hei88: footerHide }">
             <slot></slot>
           </div>
           <div class="hyModal-wrap-footer" v-if="!footerHide">
             <slot name="footer">
-              <i-button type="text" size="large" @click.native="cancel"  style="color: #57a3f3;">{{ cancelText }}</i-button>
+              <i-button type="text" size="large" @click.native="cancel" style="color: #57a3f3;">{{
+                cancelText
+              }}</i-button>
               <i-button type="primary" size="large" @click.native="ok">{{ okText }}</i-button>
             </slot>
           </div>
-
         </div>
       </template>
       <template v-else>
         <div class="hyModal-wrap" :style="mainStyles" v-show="visible">
-          <div class="hyModal-wrap-header" v-if="showHead" :style="{color: titleColor, borderBottom: titleStyle.borderBottom}">
+          <div
+            class="hyModal-wrap-header"
+            v-if="showHead"
+            :style="{ color: titleColor, borderBottom: titleStyle.borderBottom }"
+          >
             <slot name="header">
               <div class="hyModal-wrap-header-inner">{{ title }}</div>
             </slot>
@@ -40,12 +55,14 @@
               </slot>
             </a>
           </div>
-          <div class="hyModal-wrap-body" :class="{'no-header': !showHead  , 'hei88':footerHide}">
+          <div class="hyModal-wrap-body" :class="{ 'no-header': !showHead, hei88: footerHide }">
             <slot></slot>
           </div>
           <div class="hyModal-wrap-footer" v-if="!footerHide">
             <slot name="footer">
-              <i-button type="Warning" size="large" @click.native="cancel">{{ cancelText }}</i-button>
+              <i-button type="Warning" size="large" @click.native="cancel">{{
+                cancelText
+              }}</i-button>
               <i-button type="primary" size="large" @click.native="ok">{{ okText }}</i-button>
             </slot>
           </div>
@@ -53,184 +70,189 @@
       </template>
     </transition>
   </div>
-
 </template>
 
 <script>
-  import TransferDom from './transfer-dom'
-  export default {
-    name: "hyModal",
-    props: {
-      value: {
-        type: Boolean,
-        default: false
-      },
-      // 是否有遮罩层
-      mask: {
-        type: Boolean,
-        default: true
-      },
-      // 是否有右上角关闭
-      closable: {
-        type: Boolean,
-        default: true
-      },
-      // wrap样式
-      styles: {
-        type: Object
-      },
-      // 标题
-      title: {
-        type: String
-      },
-      // modal宽度
-      width: {
-        type: [Number, String],
-        default: 800
-      },
-      // modal高度
-      height: {
-        type: [Number, String],
-        default: 670
-      },
-      // 位置，fix
-      top: {
-        type: [Number, String],
-        default: 30
-      },
-      left: {
-        type: [Number, String],
-        default: 50
-      },
-      // 确定按钮文字
-      okText: {
-        type: String,
-        default: "确定"
-      },
-      // 取消按钮文字
-      cancelText: {
-        type: String,
-        default: "取消"
-      },
-      // 是否隐藏底部
-      footerHide: {
-        type: Boolean,
-        default: true
-      },
-      // 字体色
-      titleColor: {
-        type: String,
-        default: '#A7F8FE'
-      },
-      titleStyle:{
-        type:Object,
-        default(){
-          return {
-            borderBottom:"1px solid #fff"
-          }
-        }
-      },
-      // 相对浏览器水平垂直居中
-      center: {
-        type: Boolean,
-        default: true
-      },
-      // 是否允许点击遮罩层关闭
-      maskClosable: {
-        type: Boolean,
-        default: true
-      },
-      // v-show:true v-if:false
-      showOrIf: {
-        type: Boolean,
-        default: false
-      },
-      transfer:{
-        type:Boolean,
-        default:false
-      },
-      maskStyles:{
-        type:Object
-      }
+import TransferDom from "./transfer-dom";
+export default {
+  name: "hyModal",
+  props: {
+    value: {
+      type: Boolean,
+      default: false,
     },
-    directives: {
-      TransferDom
+    // 是否有遮罩层
+    mask: {
+      type: Boolean,
+      default: true,
     },
-    computed: {
-      mainStyles() {
-        let style = {};
-        const width = parseInt(this.width);
-        const width_half = parseInt(this.width)/2;
-        const height = parseInt(this.height);
-        const height_half = parseInt(this.height)/2;
-        const top = this.center ? 50 : parseInt(this.top);
-        const left = this.center ? 50 : parseInt(this.left);
-        const styleSize = {
-          width: width <= 100 ? `${width}%` : `${width}px`,
-          height: height <= 100 ? `${height}%` : `${height}px`
+    // 是否有右上角关闭
+    closable: {
+      type: Boolean,
+      default: true,
+    },
+    // wrap样式
+    styles: {
+      type: Object,
+    },
+    // 标题
+    title: {
+      type: String,
+    },
+    // modal宽度
+    width: {
+      type: [Number, String],
+      default: 800,
+    },
+    // modal高度
+    height: {
+      type: [Number, String],
+      default: 670,
+    },
+    // 位置，fix
+    top: {
+      type: [Number, String],
+      default: 30,
+    },
+    left: {
+      type: [Number, String],
+      default: 50,
+    },
+    // 确定按钮文字
+    okText: {
+      type: String,
+      default: "确定",
+    },
+    // 取消按钮文字
+    cancelText: {
+      type: String,
+      default: "取消",
+    },
+    // 是否隐藏底部
+    footerHide: {
+      type: Boolean,
+      default: true,
+    },
+    // 字体色
+    titleColor: {
+      type: String,
+      default: "#A7F8FE",
+    },
+    titleStyle: {
+      type: Object,
+      default() {
+        return {
+          borderBottom: "1px solid #fff",
         };
-        const stylePosition = {
-          position: "fixed",
-          top: top < 100 ? this.center ? `calc(${top}% - ${height_half}px)` : `${top}%` : `${top}px`,
-          left: left < 100 ? this.center ? `calc(${left}% - ${width_half}px)` : `${left}%` : `${left}px`,
-          // transform: this.center ?"translate(-50%, -50%)":""
-        };
-        const customStyle = this.styles ? this.styles : {};
-        // width + 自定义样式
-        Object.assign(style, styleSize, stylePosition, customStyle);
-        return style;
       },
-      setMaskStyles(){
-        let style = {};
-        const customStyle = this.maskStyles ? this.maskStyles : {};
-        Object.assign(style, customStyle);
-        return style
-      }
     },
-    data() {
-      return {
-        showHead: true,
-        visible: this.value
+    // 相对浏览器水平垂直居中
+    center: {
+      type: Boolean,
+      default: true,
+    },
+    // 是否允许点击遮罩层关闭
+    maskClosable: {
+      type: Boolean,
+      default: true,
+    },
+    // v-show:true v-if:false
+    showOrIf: {
+      type: Boolean,
+      default: false,
+    },
+    transfer: {
+      type: Boolean,
+      default: false,
+    },
+    maskStyles: {
+      type: Object,
+    },
+  },
+  directives: {
+    TransferDom,
+  },
+  computed: {
+    mainStyles() {
+      let style = {};
+      const width = parseInt(this.width);
+      const width_half = parseInt(this.width) / 2;
+      const height = parseInt(this.height);
+      const height_half = parseInt(this.height) / 2;
+      const top = this.center ? 50 : parseInt(this.top);
+      const left = this.center ? 50 : parseInt(this.left);
+      const styleSize = {
+        width: width <= 100 ? `${width}%` : `${width}px`,
+        height: height <= 100 ? `${height}%` : `${height}px`,
       };
+      const stylePosition = {
+        position: "fixed",
+        top:
+          top < 100 ? (this.center ? `calc(${top}% - ${height_half}px)` : `${top}%`) : `${top}px`,
+        left:
+          left < 100
+            ? this.center
+              ? `calc(${left}% - ${width_half}px)`
+              : `${left}%`
+            : `${left}px`,
+        // transform: this.center ?"translate(-50%, -50%)":""
+      };
+      const customStyle = this.styles ? this.styles : {};
+      // width + 自定义样式
+      Object.assign(style, styleSize, stylePosition, customStyle);
+      return style;
     },
-    watch: {
-      value(val) {
-        this.visible = val;
-      }
+    setMaskStyles() {
+      let style = {};
+      const customStyle = this.maskStyles ? this.maskStyles : {};
+      Object.assign(style, customStyle);
+      return style;
     },
-    methods: {
-      // 关闭modal
-      close() {
-        this.visible = false;
-        this.$emit("input", false);
-        this.$emit("on-cancel");
-      },
-      cancel() {
+  },
+  data() {
+    return {
+      showHead: true,
+      visible: this.value,
+    };
+  },
+  watch: {
+    value(val) {
+      this.visible = val;
+    },
+  },
+  methods: {
+    // 关闭modal
+    close() {
+      this.visible = false;
+      this.$emit("input", false);
+      this.$emit("on-cancel");
+    },
+    cancel() {
+      this.close();
+    },
+    handleClickMask() {
+      if (this.maskClosable) {
         this.close();
-      },
-      handleClickMask() {
-        if (this.maskClosable) {
-          this.close();
-        }
-      },
-      // 确定按钮
-      ok() {
-        this.visible = false;
-        this.$emit("input", false);
-        this.$emit("on-ok");
-      },
-      initModal() {
-        let showHead = true;
-        if (this.$slots.header === undefined && !this.title) {
-          showHead = false;
-        }
-        this.showHead = showHead;
       }
     },
-    mounted() {
-      this.initModal();
-    }
-  };
+    // 确定按钮
+    ok() {
+      this.visible = false;
+      this.$emit("input", false);
+      this.$emit("on-ok");
+    },
+    initModal() {
+      let showHead = true;
+      if (this.$slots.header === undefined && !this.title) {
+        showHead = false;
+      }
+      this.showHead = showHead;
+    },
+  },
+  mounted() {
+    this.initModal();
+  },
+};
 </script>
 
 <style lang="less" scoped>
@@ -282,7 +304,7 @@
       line-height: 1;
       text-align: left;
       font-size: 24px;
-      &-inner{
+      &-inner {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -301,6 +323,7 @@
     }
     &-body.hei88 {
       height: calc(~"100% - 88px");
+      color: #fff;
     }
     .no-header {
       height: 100%;
@@ -329,26 +352,25 @@
 .hyModal-leave-active {
   transition: all 0.3s linear;
 }
-.hyModal-enter-active{
-  animation: hySacle .3s;
+.hyModal-enter-active {
+  animation: hySacle 0.3s;
 }
 .hyModal-leave-active {
-  animation: hySacle .3s reverse;
+  animation: hySacle 0.3s reverse;
 }
-
 
 .hyModal-enter,
 .hyModal-leave-to {
   // opacity: 0;
 }
 @keyframes hySacle {
-    0% {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 </style>

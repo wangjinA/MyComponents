@@ -3,6 +3,15 @@ export const pageConfig = {
     list: [{
       title: 'components',
       children: [{
+        name: '3D云标签',
+        cName: 'threedTags',
+      }, {
+        name: '滚动表格',
+        cName: 'scrollTable',
+      }, {
+        name: '多选列表',
+        cName: 'hySelect',
+      }, {
         name: '按钮',
         cName: 'hyButton',
       }, {
@@ -11,9 +20,6 @@ export const pageConfig = {
       }, {
         name: '表单',
         cName: 'hyForm',
-      }, {
-        name: '3D云标签',
-        cName: 'threedTags',
       }]
     }]
   },

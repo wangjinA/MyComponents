@@ -2,53 +2,43 @@
  * @Author: 汪锦
  * @Date: 2020-03-16 15:20:13
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-09-01 16:22:56
+ * @LastEditTime: 2020-07-28 10:07:49
  * @Description: 滚动表格
  -->
 <template>
   <div class="scrollTable" @mouseenter="Stop()" @mouseleave="Up()">
-    <!-- 标题 -->
-    <div
-      class="scrollTable-title"
-      v-if="showHeader"
-      :style="{ height: headerLineHeight + company, fontSize: titleFontSize + company }"
-    >
+    <div class="scrollTable-title" :style="{ height: headerLineHeight + 'px' }">
       <div class="title-item item-index" v-if="showIndex">序号</div>
       <div
         class="title-item"
         v-for="item in columns"
         :key="item.title"
-        :style="{ flex: `0 0 ${item.width + company}` }"
+        :style="{ flex: `0 0 ${item.width + 'px'}` }"
       >
         {{ item.title }}
       </div>
-      <div class="scroll-title-line stl"></div>
-      <div class="scroll-title-line sbl"></div>
     </div>
-    <!-- 内容 -->
     <div
       ref="scrollTableList"
       class="scrollTable-list yjcg-content-scrollbar"
       :class="{ overflowAuto: isOverflow }"
-      :style="`height: ${lineHeight * showLength + spacing * (showLength - 1)}${company}`"
+      :style="`height: ${lineHeight * showLength + spacing * (showLength - 1)}px`"
     >
       <div
         ref="scrollTableListBox"
         class="scrollTable-list-box"
         :style="
           animate &&
-            `transition: .5s; transform:translate(0, ${-lineHeight * trunCount -
-              spacing}${company})`
+            `transition: .5s; transform:translate(0, ${-lineHeight * trunCount - spacing}px)`
         "
       >
         <div
           class="scrollTable-list-box-item"
-          @click="$emit('select-item', item)"
+          @click="$dispatch('selectItem', item)"
           :style="{
             backgroundColor: item.backgroundColor,
-            height: lineHeight + company,
-            marginBottom: spacing + company,
-            fontSize: listFontSize + company,
+            height: lineHeight + 'px',
+            marginBottom: spacing + 'px',
           }"
           v-for="item in list"
           :key="item.diyKey"
@@ -59,16 +49,24 @@
             class="list-item"
             v-for="col in columns"
             :key="col.key"
-            :style="{ flex: `0 0 ${col.width + company}` }"
+            :style="{ flex: `0 0 ${col.width + 'px'}` }"
           >
-            <div class="text-overflow" v-if="col.key">{{ item[col.key] }}</div>
+            <Tooltip
+              :content="item[col.key]"
+              v-if="col.key"
+              placement="top"
+              class="scrollTable-tooltip"
+              max-width="200"
+            >
+              <span class="text-overflow">{{ item[col.key] }}</span>
+            </Tooltip>
             <slot :name="col.slot" v-if="col.slot" :item="item"></slot>
           </div>
         </div>
         <div
           v-if="list.length == 0"
           class="scrollTable-list-box-item scrollNotData"
-          :style="{ height: lineHeight + company }"
+          :style="{ height: lineHeight + 'px' }"
         >
           暂无数据
         </div>
@@ -80,70 +78,49 @@
 export default {
   name: "scrollTable",
   props: {
-    // 单位，默认rem
-    company: {
-      type: String,
-      default: "px",
-    },
     // 表头行高
     headerLineHeight: {
       type: Number,
-      default: 30,
+      default: 40,
     },
     // 表体行高
     lineHeight: {
       type: Number,
-      default: 36,
+      default: 40,
     },
-    // 是否显示index
     showIndex: {
+      // 是否显示index
       type: Boolean,
       default: true,
     },
-    // 是否显示头部
-    showHeader: {
-      type: Boolean,
-      default: true,
-    },
-    // 时长
     duration: {
+      // 时长
       type: Number,
       default: 2000,
     },
-    // 每次滚动行数
     trunCount: {
+      // 每次滚动行数
       type: Number,
       default: 1,
     },
-    // 表头数组 [{name: 表头名字, attr: '表体属性名', slot: '插槽名称', title: '是否显示表体', width: '宽度'}]
     columns: {
+      // 表头数组 [{label: 表头名字, attr: '表体属性名', slot: '插槽名称', title: '是否显示表体', width: '宽度'}]
       type: Array,
       default: (_) => [],
     },
-    // 表体数组
     data: {
+      // 表体数组
       type: Array,
       default: (_) => [],
     },
-    // 显示多少行
     showLength: {
       type: Number,
-      default: 5,
+      default: 10,
     },
-    // 间距
     spacing: {
+      // 间距
       type: Number,
-      default: 0.08,
-    },
-    // 标题字体大小
-    titleFontSize: {
-      type: Number,
-      default: 14,
-    },
-    // 列表字体大小
-    listFontSize: {
-      type: Number,
-      default: 14,
+      default: 20,
     },
   },
   data() {
@@ -183,9 +160,6 @@ export default {
     },
   },
   methods: {
-    fontSize(num) {
-      return num * 100;
-    },
     getRandomCount(n = 18) {
       let chars = [
         "0",
@@ -276,80 +250,34 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.item-index {
-  flex: none;
-  max-width: 2.5em;
-  box-sizing: content-box;
-}
 .scrollTable {
   color: #fff;
-  width: 100%;
   &-title {
-    background-color: rgba(47, 116, 136, 0.5);
+    background-color: rgba(20, 93, 192, 0.4);
     width: 100%;
     display: flex;
     align-items: center;
-    font-family: "Microsoft YaHei Bold";
-    font-weight: 700;
-    position: relative;
     .title-item {
       padding: 0 3%;
       flex: 1;
+      &.item-index {
+        flex: none;
+      }
       // &:nth-child(3) {
       //   flex: none;
       //   width: 0.8px;
       //   padding: 0;
       // }
     }
-    .scroll-title-line {
-      position: absolute;
-      height: 0.01rem;
-      left: -0.05rem;
-      right: -0.05rem;
-      background-color: rgba(112, 251, 253, 0.45);
-      &::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        background-color: rgba(112, 251, 253, 1);
-        height: 0.03rem;
-        width: 0.03rem;
-        top: -0.03rem;
-      }
-      &::after {
-        content: "";
-        position: absolute;
-        right: 0;
-        background-color: rgba(112, 251, 253, 1);
-        height: 0.03rem;
-        width: 0.03rem;
-        top: -0.03rem;
-      }
-      &.stl {
-        top: -0.04rem;
-      }
-      &.sbl {
-        bottom: -0.04rem;
-        &::before {
-          top: auto;
-          bottom: -0.03rem;
-        }
-        &::after {
-          top: auto;
-          bottom: -0.03rem;
-        }
-      }
-    }
   }
   &-list {
-    // margin-top: 0.14rem;
+    height: 100px;
     overflow: hidden;
     &-box {
       &-item {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: rgba(112, 251, 253, 0.1);
         .list-item {
           padding: 0 3%;
           overflow: hidden;
@@ -366,18 +294,14 @@ export default {
           }
         }
         &.even {
-          background: linear-gradient(
-            0deg,
-            rgba(66, 157, 187, 0.42620798319327735) 0%,
-            rgba(66, 157, 187, 1) 100%
-          );
+          background-color: rgba(20, 93, 192, 0.4);
         }
       }
     }
     &::-webkit-scrollbar {
       /* Y滚动条宽度 */
-      width: 0px;
-      height: 0px;
+      width: 2px;
+      height: 2px;
     }
   }
   .overflowAuto {

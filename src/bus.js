@@ -17,6 +17,14 @@ export const busMixins = {
     })
   }
 }
+let bus = new Vue()
+let timer
+window.addEventListener('resize', e => {
+  clearTimeout(timer) // 节流
+  timer = setTimeout(() => {
+    bus.$emit('resize', e) // 节流后触发bus
+  }, 100)
+})
 
-Vue.prototype.$bus = new Vue()
+Vue.prototype.$bus = bus
 Vue.mixin(busMixins)

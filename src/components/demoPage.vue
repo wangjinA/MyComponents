@@ -2,12 +2,12 @@
  * @Author: 汪锦
  * @Date: 2020-06-18 10:47:32
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-08-28 10:53:03
- * @Description: 文件描述
+ * @LastEditTime: 2020-08-31 17:58:07
+ * @Description: 示例容器组件
 -->
 <template>
   <div class="demo-page">
-    <div class="use-container" :style="`background:${options.bg}`">
+    <div class="use-container" :style="`background:${options.bg};`">
       <slot></slot>
     </div>
     <div class="container">
@@ -33,8 +33,9 @@ export default {
     };
   },
   created() {
+    console.log(this);
     this.$get("/api/getCode", {
-      cName: this.options.cName || this.$parent.$options.replace("-demo", ""),
+      cName: this.cName,
     }).then((res) => {
       this.code = res.data.code;
     });
@@ -49,7 +50,6 @@ export default {
 }
 .container {
   background-color: #fff;
-  background-color: #f0f2f6;
   min-height: 50%;
 }
 .use-container {

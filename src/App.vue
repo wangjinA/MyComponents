@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-06-17 17:22:19
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-08-28 16:33:03
+ * @LastEditTime: 2020-08-31 17:37:41
  * @Description: 文件描述
 -->
 <template>
@@ -14,6 +14,9 @@
 <script>
 export default {
   name: "App",
+  created() {
+    window.app = this;
+  },
 };
 </script>
 
