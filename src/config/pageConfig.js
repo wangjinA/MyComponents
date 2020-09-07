@@ -42,9 +42,24 @@ export const pageConfig = {
         cName: 'links',
         tips: '不错的链接',
       }]
+    }, {
+      title: 'vue指令',
+      children: [{
+        name: '编辑div',
+        cName: 'divEdit',
+        tips: '可以编辑的div，只能粘贴纯文本，和本站echarts编辑器相同'
+      }]
     }]
   },
-  echarts: {}
+  动画: {
+    list: [{
+      title: 'components',
+      children: [{
+        name: '动画列表',
+        cName: 'hyTransitionList',
+      }]
+    }]
+  }
 }
 
 export default pageConfig

@@ -4,8 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "server": "nodemon server.js"
+    "dev": "nodemon app.js",
+    "server": "nodemon app.js",
+    "pm2": "pm2 start app.js",
+    "apidoc": "apidoc -i router/ -o public/apidoc"
   },
   "keywords": [],
   "author": "",

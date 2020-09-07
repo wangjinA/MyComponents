@@ -6,10 +6,27 @@ const fs = require('fs')
 const { login, register, getEcharts, addEcharts, deleteEcharts } = require('../db')
 const { sign, verify } = require('../config/token')
 const compressing = require('compressing');
-const { errorMonitor } = require('stream');
 
 
-// 登录
+/**
+ * @api {post} /api/login 用户登录
+ * @apiDescription 用户登录
+ * @apiName login
+ * @apiGroup User
+ * @apiParam {string} userName 用户名
+ * @apiParam {string} password 密码
+ * @apiSuccess {json} data 数据
+ * @apiSuccessExample {json} Success-Response:
+ *  {
+ *      "status" : 1,
+ *      "data" : {
+ *          "name" : "loginName",
+ *          "password" : "loginPass"
+ *      }
+ *  }
+ * @apiSampleRequest http://localhost:3000/api/login
+ * @apiVersion 1.0.0
+ */
 router.post('/api/login', (req, res) => {
   if (!req.body.userName || !req.body.password) {
     res.send({

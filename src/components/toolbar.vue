@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-06-17 17:37:26
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-09-01 10:31:25
+ * @LastEditTime: 2020-09-04 10:26:49
  * @Description: 工具栏
 -->
 <template>
@@ -13,10 +13,6 @@
     </div>
     <div style="margin: 0 auto; font-size:20px;">组件库</div>
     <ul class="nav-ul">
-      <!-- <li :class="{ active: globalType === 'echarts' }" @click="$bus.$emit('showE')">echarts</li>
-      <li :class="{ active: globalType === '组件库' }" @click="$bus.$emit('showC')">组件库</li>
-      <li :class="{ active: globalType === 'js库' }" @click="$bus.$emit('showU')">js库</li>
-      <li :class="{ active: globalType === '上传组件' }" @click="navHandler">上传组件</li> -->
       <li
         :class="{ active: globalType === item.name }"
         v-for="(item, index) in list"
@@ -38,6 +34,9 @@ export default {
       list: [
         {
           name: "echarts",
+        },
+        {
+          name: "动画",
         },
         {
           name: "组件库",

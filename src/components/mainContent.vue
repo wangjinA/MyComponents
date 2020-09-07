@@ -2,12 +2,12 @@
  * @Author: 汪锦
  * @Date: 2020-06-18 09:18:18
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-09-01 09:57:15
+ * @LastEditTime: 2020-09-04 10:27:37
  * @Description: 主容器
 -->
 <template>
   <main class="main" @click="mainClick">
-    <template v-if="globalType === '组件库'">
+    <template v-if="globalType === '组件库' || globalType === '动画'">
       <component :is="`${cName}-Demo`" />
     </template>
     <template v-if="globalType === 'js库'">

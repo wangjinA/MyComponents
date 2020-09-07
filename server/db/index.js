@@ -14,7 +14,7 @@ function getConnection(sql) {
         // console.log(sql);
         if (err) {
           console.log(err);
-          return reject('查询出错')
+          return reject('SQL查询出错' + err.toString())
         }
         resolve(result)
         pool.end();
