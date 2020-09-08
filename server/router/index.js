@@ -1,4 +1,4 @@
-const { SuccessModel, ErrorModel } = require('../model/resModel')
+const { SuccessModel, ErrorModel } = require('../models/resModel')
 const express = require('express');
 const router = express.Router()
 const path = require('path')
