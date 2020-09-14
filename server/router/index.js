@@ -4,9 +4,9 @@ const router = express.Router()
 const path = require('path')
 const fs = require('fs')
 const { login, register, getEcharts, addEcharts, deleteEcharts } = require('../db')
-const { sign, verify } = require('../config/token')
+const { sign, verify } = require('../models/token')
 const compressing = require('compressing');
-
+const { setUsers } = require('../models/globalVariable')
 
 /**
  * @api {post} /api/login 用户登录
@@ -37,7 +37,7 @@ router.post('/api/login', (req, res) => {
     login(req.body).then(result => {
       if (result && result.length)
         res.send(new SuccessModel({
-          userName: req.body.userName,
+          userInfo: result[0],
           ...sign(req)
         }, '登陆成功',
         ))
@@ -55,8 +55,13 @@ router.post('/api/register', (req, res) => {
     res.send(new ErrorModel('用户名和密码不能为空'))
   } else {
     register(req.body).then(result => {
-      if (result && result.affectedRows)
-        res.send(new SuccessModel('注册成功'))
+      if (result && result.affectedRows) {
+        res.send(new SuccessModel({}, '注册成功'))
+        login(req.body).then(result => {
+          if (result && result.length)
+            setUsers(result[0]) // 创建用户之后更新一下用户表缓存
+        })
+      }
       else
         res.send(new ErrorModel('注册失败，用户已存在'))
     }).catch(err => {
@@ -153,5 +158,11 @@ router.post('/api/deleteEcharts', async (req, res) => {
     }).catch(err => {
       res.send(new ErrorModel(err.toString()))
     })
+})
+// 获取socket在线成员
+router.get('/api/socketOnline', (req, res) => {
+  res.send(new SuccessModel(
+    Object.keys(global.arrAllSocket).map(userId => global.users[userId])
+  ))
 })
 module.exports = router

@@ -44,12 +44,16 @@ module.exports = {
         return getConnection(registerSql)
       }
     })
-
+  },
+  // 获取所有用户
+  getAllUser() {
+    let sql = `select * from users`
+    return getConnection(sql)
   },
   // 获取echarts列表
   getEcharts({ pageNum = 1, pageSize = 20 }) {
-    let SQL = `select * from echarts WHERE isRemove is null`
-    return getConnection(SQL)
+    let sql = `select * from echarts WHERE isRemove is null`
+    return getConnection(sql)
       .then(list => {
         return list.splice(pageSize * (pageNum - 1), pageSize).reverse()
       })
@@ -57,16 +61,16 @@ module.exports = {
   // 添加echarts
   addEcharts({ options, userName, id, bg }) {
     options = options.replace(/'/g, '"')
-    let SQL = `insert into echarts (options, userName, bg) VALUES ('${options}', '${userName}', '${bg}')`
+    let sql = `insert into echarts (options, userName, bg) VALUES ('${options}', '${userName}', '${bg}')`
     if (id) {
       console.log(id);
-      SQL = `UPDATE echarts set options='${options}',bg='${bg}' WHERE id=${id}`
+      sql = `UPDATE echarts set options='${options}',bg='${bg}' WHERE id=${id}`
     }
-    return getConnection(SQL)
+    return getConnection(sql)
   },
   // 删除echarts
   deleteEcharts({ id, userName }) {
-    let SQL = `UPDATE echarts set isRemove='${userName}' WHERE id=${id}`
-    return getConnection(SQL)
+    let sql = `UPDATE echarts set isRemove='${userName}' WHERE id=${id}`
+    return getConnection(sql)
   }
 }

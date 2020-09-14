@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-06-17 17:37:26
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-09-04 10:26:49
+ * @LastEditTime: 2020-09-10 10:17:55
  * @Description: 工具栏
 -->
 <template>
@@ -33,6 +33,9 @@ export default {
     return {
       list: [
         {
+          name: "socket.io",
+        },
+        {
           name: "echarts",
         },
         {
@@ -61,14 +64,14 @@ export default {
     globalType: {
       handler(val) {
         try {
-          if (val === "echarts") {
+          if (val === "echarts" || val === "socket.io") {
             this.setHasSidebar(false);
           } else {
             this.setHasSidebar(true);
           }
           this.setcName(pageConfig[val].list[0].children[0].cName); // 切换导航 获取列表下第一个组件
         } catch (error) {
-          console.log(error);
+          console.log(error && "");
         }
       },
       immediate: true,

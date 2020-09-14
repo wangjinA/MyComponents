@@ -1,4 +1,6 @@
 import { Message } from 'view-design'
+import Vue from 'vue'
+import router from '@/router'
 // 复制文本
 export const copyText = str => {
   const el = document.createElement("textarea"); // 创建一个 <textarea> 元素
@@ -24,7 +26,46 @@ export const copyText = str => {
     content: "复制成功",
   });
 }
+// session绑定Vue
+export const sessionJoinVue = (key, value) => {
+  sessionStorage.setItem(key, typeof value === 'object' ? JSON.stringify(value) : value)
+  Vue.prototype[key] = value
+  let joins = sessionStorage.getItem('sessionJoinVue')
+  joins = joins ? JSON.parse(joins) : ''
+  if (joins) {
+    if (joins.indexOf(key) == -1) {
+      joins.push(key)
+    }
+  } else {
+    joins = [key]
+  }
+  sessionStorage.setItem('sessionJoinVue', JSON.stringify(joins))
+}
+
+export const initSessionJoinVue = (relation = []) => {
+  // relation 关联的session
+  let joins = sessionStorage.getItem('sessionJoinVue')
+  joins = joins ? JSON.parse(joins) : ''
+  if (joins) {
+    joins.forEach(key => {
+      let value = sessionStorage.getItem(key)
+      try {
+        value = value ? JSON.parse(value) : ''
+        Vue.prototype[key] = value
+      } catch (error) {
+        Vue.prototype[key] = value
+      }
+    })
+  } else {
+    if (relation.length) {
+      setTimeout(() => {
+        router.push('/')
+      }, 0);
+    }
+  }
+}
 
 export default {
-  copyText
+  copyText,
+  sessionJoinVue
 }

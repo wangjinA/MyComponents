@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-06-18 09:18:18
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-09-04 10:27:37
+ * @LastEditTime: 2020-09-10 09:32:55
  * @Description: 主容器
 -->
 <template>
@@ -17,17 +17,22 @@
     <template v-if="globalType === 'echarts'">
       <echart-preview></echart-preview>
     </template>
+    <template v-if="globalType === 'socket.io'">
+      <socket-io></socket-io>
+    </template>
   </main>
 </template>
 
 <script>
 import codeView from "@/components/codeView";
 import echartPreview from "@/components/echarts/echartPreview";
+import socketIo from "@/components/socket.io";
 export default {
   name: "mainContent",
   components: {
     codeView,
     echartPreview,
+    socketIo,
   },
   data() {
     return {

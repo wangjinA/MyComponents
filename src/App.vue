@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-06-17 17:22:19
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-08-31 17:37:41
+ * @LastEditTime: 2020-09-11 09:30:52
  * @Description: 文件描述
 -->
 <template>
@@ -12,10 +12,12 @@
 </template>
 
 <script>
+import socket from "@/components/socket.io/connect";
 export default {
   name: "App",
   created() {
     window.app = this;
+    this.$root.socket = socket;
   },
 };
 </script>

@@ -12,7 +12,9 @@
 </template>
 
 <script>
+import Vue from "vue";
 import LoginForm from "@/components/login-form";
+import { sessionJoinVue } from "@/utils";
 export default {
   name: "login",
   components: {
@@ -42,13 +44,22 @@ export default {
           password,
         },
         true
-      ).then((res) => {
-        console.log(res);
-        if (res.status) {
-          localStorage.setItem("token", res.data.token);
-          this.$router.push("/myC");
-        }
-      });
+      )
+        .then((res) => {
+          console.log(res);
+          if (res.status) {
+            localStorage.setItem("token", res.data.token);
+            this.sessionJoinVue("userInfo", res.data.userInfo);
+            this.$router.push("/myC");
+          }
+        })
+        .catch(() => {
+          this.$Message.error({
+            background: true,
+            content: "登录失败",
+            duration: 2,
+          });
+        });
     },
   },
 };

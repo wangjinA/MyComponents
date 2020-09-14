@@ -4,7 +4,7 @@ Vue.use(Vuex)
 
 const state = {
   cName: '', // 当前选中的【组件】类型
-  globalType: '组件库', // 当前显示类型
+  globalType: 'socket.io', // 当前显示类型
   hasSidebar: true,
   sidebarItem: {},
 }
