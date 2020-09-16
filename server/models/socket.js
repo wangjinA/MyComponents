@@ -53,10 +53,11 @@ const leave = userId => {
 }
 // 初始化
 const initSocket = server => {
-  var sockets = io(server, {
+  const sockets = io(server, {
     path: '/socket',
   }); // 监听server
-  sockets.on("connection", socket => {
+  sockets.of('chat').on("connection", socket => {
+    console.log(socket === sockets);
     console.log("初始化成功！");
     socket.on('join', userId => {
       join(userId, socket)

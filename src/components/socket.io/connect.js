@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-let socket = io("http://localhost:3000", {
+let socket = io.connect("http://localhost:3000/chat", {
   path: '/socket',
   reconnectionAttempts: 2, // 最大重连数
   test: 666
