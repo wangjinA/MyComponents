@@ -59,7 +59,7 @@ export default {
 }
 .list {
   margin-bottom: 10px;
-  transition-duration: 0.3s;
+  // transition-duration: 0.3s;
   width: 100%;
 }
 </style>

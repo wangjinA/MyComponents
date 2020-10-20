@@ -19,18 +19,29 @@ export default {
   props: {
     name: {
       type: String,
-      default: "v",
+      default: "list",
+    },
+    delay: {
+      type: Number,
+      default: 0.1,
     },
   },
   data() {
     return {};
   },
   methods: {
+    getDelay(dom) {
+      // 获取延迟时间
+      const VNodeList = this.$slots.default; // 默认插槽的列表
+      const index = VNodeList.findIndex((VNode) => VNode.elm === dom); // 当前dom的下标
+      return dom.dataset.delay ? dom.dataset.delay * 1000 : index * this.delay * 1000;
+    },
     beforeEnter(dom) {
       dom.classList.add(`${this.name}-enter`, `${this.name}-enter-active`);
     },
     enter(dom, done) {
-      let delay = dom.dataset.delay * 1000;
+      console.log(this);
+      let delay = this.getDelay(dom);
       setTimeout(() => {
         dom.classList.remove(`${this.name}-enter`);
         dom.classList.add(`${this.name}-enter-to`);
@@ -49,8 +60,7 @@ export default {
       dom.classList.add(`${this.name}-leave`, `${this.name}-leave-active`);
     },
     leave(dom, done) {
-      let delay = dom.dataset.delay;
-      console.log(delay);
+      let delay = this.getDelay(dom);
       setTimeout(() => {
         dom.classList.remove(`${this.name}-leave`);
         dom.classList.add(`${this.name}-leave-to`);
@@ -76,6 +86,7 @@ export default {
   > li,
   > div {
     width: 100%;
+    transition-duration: 0.7s;
   }
 }
 
@@ -85,9 +96,11 @@ export default {
   transition: 0.5s;
 }
 .list-enter {
+  opacity: 0.5;
   transform: translateY(20px);
 }
 .list-enter-to {
+  opacity: 1;
   transform: translateY(0);
 }
 .list-leave {

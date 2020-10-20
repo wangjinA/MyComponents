@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-03-16 15:20:13
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-09-01 16:22:56
+ * @LastEditTime: 2020-10-20 11:04:05
  * @Description: 滚动表格
  -->
 <template>
@@ -22,8 +22,6 @@
       >
         {{ item.title }}
       </div>
-      <div class="scroll-title-line stl"></div>
-      <div class="scroll-title-line sbl"></div>
     </div>
     <!-- 内容 -->
     <div
@@ -32,15 +30,12 @@
       :class="{ overflowAuto: isOverflow }"
       :style="`height: ${lineHeight * showLength + spacing * (showLength - 1)}${company}`"
     >
-      <div
+      <!-- <div
         ref="scrollTableListBox"
         class="scrollTable-list-box"
-        :style="
-          animate &&
-            `transition: .5s; transform:translate(0, ${-lineHeight * trunCount -
-              spacing}${company})`
-        "
-      >
+        :style="animate && `transition: .5s; transform:translate(0, ${-lineHeight * trunCount - spacing}${company})`"
+      > -->
+      <transition-group ref="scrollTableListBox" tag="div" name="scrollTable" appear>
         <div
           class="scrollTable-list-box-item"
           @click="$emit('select-item', item)"
@@ -65,14 +60,15 @@
             <slot :name="col.slot" v-if="col.slot" :item="item"></slot>
           </div>
         </div>
-        <div
-          v-if="list.length == 0"
-          class="scrollTable-list-box-item scrollNotData"
-          :style="{ height: lineHeight + company }"
-        >
-          暂无数据
-        </div>
+      </transition-group>
+      <div
+        v-if="list.length == 0"
+        class="scrollTable-list-box-item scrollNotData"
+        :style="{ height: lineHeight + company }"
+      >
+        暂无数据
       </div>
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -88,17 +84,17 @@ export default {
     // 表头行高
     headerLineHeight: {
       type: Number,
-      default: 30,
+      default: 40,
     },
     // 表体行高
     lineHeight: {
       type: Number,
-      default: 36,
+      default: 45,
     },
     // 是否显示index
     showIndex: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     // 是否显示头部
     showHeader: {
@@ -108,7 +104,7 @@ export default {
     // 时长
     duration: {
       type: Number,
-      default: 2000,
+      default: 3000,
     },
     // 每次滚动行数
     trunCount: {
@@ -128,7 +124,7 @@ export default {
     // 显示多少行
     showLength: {
       type: Number,
-      default: 5,
+      default: 4,
     },
     // 间距
     spacing: {
@@ -138,37 +134,35 @@ export default {
     // 标题字体大小
     titleFontSize: {
       type: Number,
-      default: 14,
+      default: 18,
     },
     // 列表字体大小
     listFontSize: {
       type: Number,
-      default: 14,
+      default: 16,
     },
   },
   data() {
     return {
-      animate: false,
       isOverflow: false,
       timeOutNum: undefined,
+      list: [],
+      isOpenScroll: false,
     };
-  },
-  computed: {
-    list() {
-      return this.data.map((item, index) => ({
-        ...item,
-        index: index + 1,
-        diyKey: this.getRandomCount(),
-      }));
-    },
-    isOpenScroll() {
-      // 判断 内容 > 容器，则开启滚动
-      return this.$refs.scrollTableListBox.offsetHeight > this.$refs.scrollTableList.offsetHeight;
-    },
   },
   watch: {
     data: {
       handler(val, oldVal) {
+        this.list = [
+          ...val.map((item, index) => ({
+            ...item,
+            index: index + 1,
+            diyKey: this.getRandomCount(),
+          })),
+        ];
+        this.$nextTick(() => {
+          this.setOpenScroll();
+        });
         if (val.length) {
           this.$nextTick(() => {
             if (this.isOpenScroll) {
@@ -179,55 +173,28 @@ export default {
           this.clear();
         }
       },
+      deep: true,
       immediate: true,
+    },
+    isOpenScroll(val) {
+      console.log(val);
+      val ? this.Up() : this.clear();
     },
   },
   methods: {
+    setOpenScroll() {
+      // 判断 内容 > 容器，则开启滚动
+      this.isOpenScroll =
+        this.$refs.scrollTableListBox.$el.offsetHeight > this.$refs.scrollTableList.offsetHeight;
+    },
     fontSize(num) {
       return num * 100;
     },
     getRandomCount(n = 18) {
-      let chars = [
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "O",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "U",
-        "V",
-        "W",
-        "X",
-        "Y",
-        "Z",
-      ];
-      var res = "";
-      for (var i = 0; i < n; i++) {
-        var id = Math.ceil(Math.random() * 35);
+      let chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      let res = "";
+      for (let i = 0; i < n; i++) {
+        let id = Math.ceil(Math.random() * 35);
         res += chars[id];
       }
       return res;
@@ -236,15 +203,15 @@ export default {
       if (this.list.length != 0) {
         this.clear();
         this.intNum = setInterval(() => {
-          this.animate = true; // 向上滚动的时候需要添加css3过渡动画
           this.timeOutNum = setTimeout(() => {
+            console.log(1);
             this.list.push(
               ...this.list.splice(0, this.trunCount).map((item) => ({
+                // this.list.splice(0, this.trunCount).map(item => ({
                 ...item,
                 diyKey: this.getRandomCount(),
               }))
             );
-            this.animate = false;
           }, 500);
         }, this.duration);
       }
@@ -266,7 +233,6 @@ export default {
       }
       if (this.timeOutNum) {
         clearTimeout(this.timeOutNum);
-        this.animate = false;
       }
     },
   },
@@ -285,12 +251,14 @@ export default {
   color: #fff;
   width: 100%;
   &-title {
-    background-color: rgba(47, 116, 136, 0.5);
+    // background-color: rgba(47, 116, 136, 0.5);
+    // background:rgba(255,255,255,.24);
+    background-color: #556c85;
     width: 100%;
     display: flex;
     align-items: center;
     font-family: "Microsoft YaHei Bold";
-    font-weight: 700;
+    // font-weight: 700;
     position: relative;
     .title-item {
       padding: 0 3%;
@@ -301,55 +269,20 @@ export default {
       //   padding: 0;
       // }
     }
-    .scroll-title-line {
-      position: absolute;
-      height: 0.01rem;
-      left: -0.05rem;
-      right: -0.05rem;
-      background-color: rgba(112, 251, 253, 0.45);
-      &::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        background-color: rgba(112, 251, 253, 1);
-        height: 0.03rem;
-        width: 0.03rem;
-        top: -0.03rem;
-      }
-      &::after {
-        content: "";
-        position: absolute;
-        right: 0;
-        background-color: rgba(112, 251, 253, 1);
-        height: 0.03rem;
-        width: 0.03rem;
-        top: -0.03rem;
-      }
-      &.stl {
-        top: -0.04rem;
-      }
-      &.sbl {
-        bottom: -0.04rem;
-        &::before {
-          top: auto;
-          bottom: -0.03rem;
-        }
-        &::after {
-          top: auto;
-          bottom: -0.03rem;
-        }
-      }
-    }
   }
   &-list {
     // margin-top: 0.14rem;
     overflow: hidden;
+    position: relative;
     &-box {
       &-item {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: rgba(112, 251, 253, 0.1);
+        // background-color: rgba(112, 251, 253, 0.1);
+        background: rgba(28, 52, 79, 0.7);
+        // background-color: #203D5E;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         .list-item {
           padding: 0 3%;
           overflow: hidden;
@@ -365,13 +298,13 @@ export default {
             font-style: normal;
           }
         }
-        &.even {
-          background: linear-gradient(
-            0deg,
-            rgba(66, 157, 187, 0.42620798319327735) 0%,
-            rgba(66, 157, 187, 1) 100%
-          );
-        }
+        // &.even {
+        //   background: linear-gradient(
+        //     0deg,
+        //     rgba(66, 157, 187, 0.42620798319327735) 0%,
+        //     rgba(66, 157, 187, 1) 100%
+        //   );
+        // }
       }
     }
     &::-webkit-scrollbar {
@@ -387,5 +320,30 @@ export default {
   //   transition: all 0.5s;
   //   margin-top: -0.225px; //高度等于行高
   // }
+}
+
+// 滚动动画
+.scrollTable-enter {
+  transform: translateY(100%);
+  opacity: 0;
+}
+.scrollTable-leave-to {
+  transform: translateY(-100%);
+}
+.scrollTable-leave,
+.scrollTable-enter-to {
+  transform: translateY(0);
+  opacity: 1;
+}
+.scrollTable-leave-active {
+  width: 100%;
+  position: absolute;
+  transition: 0.5s;
+}
+.scrollTable-enter-active {
+  transition: 0.5s;
+}
+.scrollTable-move {
+  transition: 0.5s;
 }
 </style>
