@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-03-16 15:20:13
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-10-20 11:04:05
+ * @LastEditTime: 2020-10-26 16:13:14
  * @Description: 滚动表格
  -->
 <template>
@@ -13,12 +13,12 @@
       v-if="showHeader"
       :style="{ height: headerLineHeight + company, fontSize: titleFontSize + company }"
     >
-      <div class="title-item item-index" v-if="showIndex">序号</div>
+      <div class="title-item item-index" :style="padding3" v-if="showIndex">序号</div>
       <div
         class="title-item"
         v-for="item in columns"
         :key="item.title"
-        :style="{ flex: `0 0 ${item.width + company}` }"
+        :style="`flex: 0 0 ${item.width + company}; ${padding3}`"
       >
         {{ item.title }}
       </div>
@@ -30,17 +30,13 @@
       :class="{ overflowAuto: isOverflow }"
       :style="`height: ${lineHeight * showLength + spacing * (showLength - 1)}${company}`"
     >
-      <!-- <div
-        ref="scrollTableListBox"
-        class="scrollTable-list-box"
-        :style="animate && `transition: .5s; transform:translate(0, ${-lineHeight * trunCount - spacing}${company})`"
-      > -->
       <transition-group ref="scrollTableListBox" tag="div" name="scrollTable" appear>
         <div
           class="scrollTable-list-box-item"
           @click="$emit('select-item', item)"
           :style="{
-            backgroundColor: item.backgroundColor,
+            backgroundColor:
+              columns.length > 1 ? item.backgroundColor || 'rgba(28, 52, 79, 0.7)' : '',
             height: lineHeight + company,
             marginBottom: spacing + company,
             fontSize: listFontSize + company,
@@ -49,12 +45,14 @@
           :key="item.diyKey"
           :class="{ even: item.index % 2 != 1 }"
         >
-          <div class="list-item item-index" v-if="showIndex">{{ item.index }}</div>
+          <div class="list-item item-index" v-if="showIndex" :style="padding3">
+            {{ item.index }}
+          </div>
           <div
             class="list-item"
             v-for="col in columns"
             :key="col.key"
-            :style="{ flex: `0 0 ${col.width + company}` }"
+            :style="`flex: 0 0 ${col.width + company}; ${padding3}`"
           >
             <div class="text-overflow" v-if="col.key">{{ item[col.key] }}</div>
             <slot :name="col.slot" v-if="col.slot" :item="item"></slot>
@@ -68,7 +66,6 @@
       >
         暂无数据
       </div>
-      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -114,7 +111,12 @@ export default {
     // 表头数组 [{name: 表头名字, attr: '表体属性名', slot: '插槽名称', title: '是否显示表体', width: '宽度'}]
     columns: {
       type: Array,
-      default: (_) => [],
+      default: () => [
+        {
+          title: "",
+          slot: "list",
+        },
+      ],
     },
     // 表体数组
     data: {
@@ -236,6 +238,11 @@ export default {
       }
     },
   },
+  computed: {
+    padding3() {
+      return this.columns.length > 1 && "padding: 0 3%;";
+    },
+  },
   destroyed() {
     this.clear();
   },
@@ -261,7 +268,6 @@ export default {
     // font-weight: 700;
     position: relative;
     .title-item {
-      padding: 0 3%;
       flex: 1;
       // &:nth-child(3) {
       //   flex: none;
@@ -279,12 +285,10 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        // background-color: rgba(112, 251, 253, 0.1);
-        background: rgba(28, 52, 79, 0.7);
+        // background-color: rgba(112, 251, 253, 0.1);;
         // background-color: #203D5E;
         border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         .list-item {
-          padding: 0 3%;
           overflow: hidden;
           flex: 1;
           .scrollTable-tooltip {

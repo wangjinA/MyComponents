@@ -11,3 +11,8 @@
 [2020-10-20T10:05:52.466] [INFO] logConsole -  GET - /api/socketOnline? - {} 
 [2020-10-20T10:05:52.987] [INFO] logConsole -  GET - /api/getEcharts?pageNum=1&pageSize=100 - {"pageNum":"1","pageSize":"100"} 
 [2020-10-20T10:05:53.210] [INFO] logConsole -  GET - /api/getCode?cName=hyTransitionList - {"cName":"hyTransitionList"} 
+[2020-10-20T11:43:31.317] [INFO] logConsole -  GET - /api/getEcharts?pageNum=1&pageSize=100 - {"pageNum":"1","pageSize":"100"} 
+[2020-10-20T14:53:22.027] [INFO] logConsole -  GET - / - {} 
+[2020-10-20T14:53:22.054] [INFO] logConsole -  GET - /socket.io.js - {} 
+[2020-10-20T14:53:22.095] [INFO] logConsole -  GET - /socket.io/?EIO=3&transport=polling&t=NL4oASi - {"EIO":"3","transport":"polling","t":"NL4oASi"} 
+[2020-10-20T14:53:22.139] [INFO] logConsole -  GET - /favicon.ico - {} 
