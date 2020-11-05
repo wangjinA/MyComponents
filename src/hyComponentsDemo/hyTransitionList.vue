@@ -1,123 +1,65 @@
-<!--
- * @Author: 汪锦
- * @Date: 2020-10-15 08:47:18
- * @LastEditors: 汪锦
- * @LastEditTime: 2020-10-20 11:20:28
- * @Description: 列表时间差动画
--->
 <template>
-  <transition-group
-    v-bind="$attrs"
-    @before-enter="beforeEnter"
-    @enter="enter"
-    @after-enter="afterEnter"
-    @before-leave="beforeLeave"
-    @leave="leave"
-    @after-leave="afterLeave"
-    class="hyTransitionList"
-    appear
-  >
-    <slot />
-  </transition-group>
+  <demo-page :options="options">
+    <hy-transition-list name="list" appear tag="div">
+      <div
+        class="list"
+        v-for="(i, index) in list"
+        :key="i"
+        @click="list.splice(index, 1)"
+        :data-delay="0.1 * i"
+      >
+        <div class="list-item">
+          <div class="li-one">
+            点我
+          </div>
+          <div class="li-two"></div>
+          <div class="li-three"></div>
+        </div>
+      </div>
+    </hy-transition-list>
+  </demo-page>
 </template>
-
 <script>
 export default {
-  name: "hyTransitionList",
-  props: {
-    name: {
-      type: String,
-      default: "list",
-    },
-    delay: {
-      type: Number,
-      default: 0.1,
-    },
-  },
   data() {
-    return {};
-  },
-  methods: {
-    getDelay(dom) {
-      // 获取延迟时间
-      const VNodeList = this.$slots.default; // 默认插槽的列表
-      const index = VNodeList.findIndex((VNode) => VNode.elm === dom); // 当前dom的下标
-      return dom.dataset.delay ? dom.dataset.delay * 1000 : index * this.delay * 1000;
-    },
-    beforeEnter(dom) {
-      dom.classList.add(`${this.name}-enter`, `${this.name}-enter-active`);
-    },
-    enter(dom, done) {
-      let delay = this.getDelay(dom);
-      console.log(delay);
-      setTimeout(() => {
-        dom.classList.remove(`${this.name}-enter`);
-        dom.classList.add(`${this.name}-enter-to`);
-        //监听 transitionend 事件
-        var transitionend = window.ontransitionend ? `transitionend` : `webkitTransitionEnd`;
-        dom.addEventListener(transitionend, function onEnd() {
-          dom.removeEventListener(transitionend, onEnd);
-          done(); // 调用done() 告诉vue动画已完成，以触发 afterEnter 钩子
-        });
-      }, delay);
-    },
-    afterEnter(dom) {
-      dom.classList.remove(`${this.name}-enter-to`, `${this.name}-enter-active`);
-    },
-    beforeLeave(dom) {
-      dom.classList.add(`${this.name}-leave`, `${this.name}-leave-active`);
-    },
-    leave(dom, done) {
-      let delay = this.getDelay(dom);
-      setTimeout(() => {
-        dom.classList.remove(`${this.name}-leave`);
-        dom.classList.add(`${this.name}-leave-to`);
-        //监听 transitionend 事件
-        var transitionend = window.ontransitionend ? `transitionend` : `webkitTransitionEnd`;
-        dom.addEventListener(transitionend, function onEnd() {
-          dom.removeEventListener(transitionend, onEnd);
-          done(); // 调用done() 告诉vue动画已完成，以触发 afterleave 钩子
-        });
-      }, delay);
-    },
-    afterLeave(dom) {
-      dom.classList.remove(`${this.name}-leave-to`, `${this.name}-leave-active`);
-    },
+    return {
+      list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      options: {
+        tips: "列表入场，交错、删除",
+      },
+    };
   },
 };
 </script>
 
-<style lang="less">
-.hyTransitionList {
-  overflow: hidden;
-  position: relative;
-  > li,
-  > div {
-    width: 100%;
-    // transition-duration: 0.7s;
+<style lang="less" scoped>
+.list-item {
+  display: grid;
+  grid-template: 20px 20px ~"/" 50px 200px;
+  gap: 10px;
+  justify-content: center;
+  .hover();
+  .li-one {
+    background-color: #6ab6fc;
+    border-radius: 10px;
+    grid-row: 1~ "/" 3;
+    color: #fff;
+    display: grid;
+    place-content: center;
+  }
+  .li-two {
+    background-color: #6ab6fc;
+    border-radius: 10px;
+  }
+  .li-three {
+    background-color: #9ed2fc;
+    border-radius: 10px;
+    width: 50%;
   }
 }
-
-.list-leave-active {
-  transition-delay: 0s !important;
-  position: absolute;
-  transition: 0.5s;
-}
-.list-enter {
-  opacity: 0.5;
-  transform: translateY(20px);
-}
-.list-enter-active {
-  transition: 0.7s;
-}
-.list-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-.list-leave {
-  transform: translateX(0px);
-}
-.list-leave-to {
-  transform: translateX(100%);
+.list {
+  margin-bottom: 10px;
+  // transition-duration: 0.3s;
+  width: 100%;
 }
 </style>
