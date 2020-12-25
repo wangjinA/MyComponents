@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-03-16 15:20:13
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-12-25 15:33:00
+ * @LastEditTime: 2020-12-25 16:09:29
  * @Description: 滚动表格
  -->
 <template>
@@ -35,7 +35,8 @@
         class="scrollTable-list-box"
         :style="
           animate &&
-            `transition: .5s; transform:translate(0, ${-lineHeight * trunCount - spacing}px)`
+            `transition: .5s; transform:translate(0, ${-lineHeight * trunCount -
+              spacing}${company})`
         "
       >
         <div
@@ -43,7 +44,9 @@
           @click="$emit('select-item', item)"
           :style="{
             backgroundColor:
-              columns.length > 1 ? item.backgroundColor || 'rgba(28, 52, 79, 0.7)' : '',
+              columns.length > 1 || showIndex
+                ? item.backgroundColor || 'rgba(28, 52, 79, 0.7)'
+                : '',
             height: lineHeight + company,
             marginBottom: spacing + company,
             fontSize: listFontSize + company,
@@ -83,17 +86,17 @@ export default {
     // 单位，默认rem
     company: {
       type: String,
-      default: "px",
+      default: "rem",
     },
     // 表头行高
     headerLineHeight: {
       type: Number,
-      default: 40,
+      default: 0.4,
     },
     // 表体行高
     lineHeight: {
       type: Number,
-      default: 45,
+      default: 0.45,
     },
     // 是否显示index
     showIndex: {
@@ -143,18 +146,17 @@ export default {
     // 标题字体大小
     titleFontSize: {
       type: Number,
-      default: 18,
+      default: 0.18,
     },
     // 列表字体大小
     listFontSize: {
       type: Number,
-      default: 16,
+      default: 0.16,
     },
   },
   data() {
     return {
       isOverflow: false,
-      timeOutNum: undefined,
       list: [],
       isOpenScroll: false,
       animate: false,
@@ -163,6 +165,7 @@ export default {
   watch: {
     data: {
       handler(val, oldVal) {
+        this.clear();
         this.list = [
           ...val.map((item, index) => ({
             ...item,
@@ -173,21 +176,11 @@ export default {
         this.$nextTick(() => {
           this.setOpenScroll();
         });
-        if (val.length) {
-          this.$nextTick(() => {
-            if (this.isOpenScroll) {
-              this.ScrollUp();
-            }
-          });
-        } else {
-          this.clear();
-        }
       },
       deep: true,
       immediate: true,
     },
     isOpenScroll(val) {
-      console.log(val);
       val ? this.Up() : this.clear();
     },
   },
@@ -238,21 +231,44 @@ export default {
       this.ScrollUp();
     },
     clear() {
-      if (this.intNum) {
-        clearInterval(this.intNum);
-      }
-      if (this.timeOutNum) {
-        clearTimeout(this.timeOutNum);
+      clearInterval(this.intNum);
+      clearTimeout(this.timeOutNum);
+    },
+    onVisibilityChange() {
+      if (!document[this.hiddenProperty]) {
+        console.log(this);
+        console.log("页面激活");
+        this.Up();
+      } else {
+        console.log("页面非激活");
+        this.Stop();
+        this.clear();
       }
     },
   },
   computed: {
     padding3() {
-      return this.columns.length > 1 && "padding: 0 3%;";
+      if (this.columns.length > 1 || this.showIndex) {
+        return "padding: 0 3%;";
+      }
+      return "";
     },
   },
   destroyed() {
     this.clear();
+    document.removeEventListener(this.visibilityChangeEvent, this.onVisibilityChange);
+  },
+  created() {
+    this.hiddenProperty =
+      "hidden" in document
+        ? "hidden"
+        : "webkitHidden" in document
+        ? "webkitHidden"
+        : "mozHidden" in document
+        ? "mozHidden"
+        : null;
+    this.visibilityChangeEvent = this.hiddenProperty.replace(/hidden/i, "visibilitychange");
+    document.addEventListener(this.visibilityChangeEvent, this.onVisibilityChange);
   },
 };
 </script>
@@ -266,26 +282,17 @@ export default {
   color: #fff;
   width: 100%;
   &-title {
-    // background-color: rgba(47, 116, 136, 0.5);
-    // background:rgba(255,255,255,.24);
     background-color: #556c85;
     width: 100%;
     display: flex;
     align-items: center;
     font-family: "Microsoft YaHei Bold";
-    // font-weight: 700;
     position: relative;
     .title-item {
       flex: 1;
-      // &:nth-child(3) {
-      //   flex: none;
-      //   width: 0.8px;
-      //   padding: 0;
-      // }
     }
   }
   &-list {
-    // margin-top: 0.14rem;
     overflow: hidden;
     position: relative;
     &-box {
@@ -293,14 +300,11 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        // background-color: rgba(112, 251, 253, 0.1);;
-        // background-color: #203D5E;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         .list-item {
           overflow: hidden;
           flex: 1;
+          cursor: default;
           .scrollTable-tooltip {
-            // .text-overflow1(1)
           }
           &.item-index {
             font-family: "DIN-Bold";
@@ -310,13 +314,6 @@ export default {
             font-style: normal;
           }
         }
-        // &.even {
-        //   background: linear-gradient(
-        //     0deg,
-        //     rgba(66, 157, 187, 0.42620798319327735) 0%,
-        //     rgba(66, 157, 187, 1) 100%
-        //   );
-        // }
       }
     }
     &::-webkit-scrollbar {
@@ -328,10 +325,9 @@ export default {
   .overflowAuto {
     overflow: hidden auto !important;
   }
-  // .anim {
-  //   transition: all 0.5s;
-  //   margin-top: -0.225px; //高度等于行高
-  // }
+  .scrollTable-list-box-item:hover  {
+    background: #6e95b645;
+  }
 }
 
 // 滚动动画
@@ -350,12 +346,12 @@ export default {
 .scrollTable-leave-active {
   width: 100%;
   position: absolute;
-  transition: 0.5s;
+  transition: 0.5s ease-in;
 }
 .scrollTable-enter-active {
-  transition: 0.5s;
+  transition: 0.5s ease-in;
 }
 .scrollTable-move {
-  transition: 0.5s;
+  transition: 0.5s ease-in;
 }
 </style>

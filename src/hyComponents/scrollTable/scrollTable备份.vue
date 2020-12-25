@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-03-16 15:20:13
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-12-25 15:33:00
+ * @LastEditTime: 2020-12-21 15:27:30
  * @Description: 滚动表格
  -->
 <template>
@@ -30,14 +30,7 @@
       :class="{ overflowAuto: isOverflow }"
       :style="`height: ${lineHeight * showLength + spacing * (showLength - 1)}${company}`"
     >
-      <div
-        ref="scrollTableListBox"
-        class="scrollTable-list-box"
-        :style="
-          animate &&
-            `transition: .5s; transform:translate(0, ${-lineHeight * trunCount - spacing}px)`
-        "
-      >
+      <transition-group ref="scrollTableListBox" tag="div" name="scrollTable" appear>
         <div
           class="scrollTable-list-box-item"
           @click="$emit('select-item', item)"
@@ -65,7 +58,7 @@
             <slot :name="col.slot" v-if="col.slot" :item="item"></slot>
           </div>
         </div>
-      </div>
+      </transition-group>
       <div
         v-if="list.length == 0"
         class="scrollTable-list-box-item scrollNotData"
@@ -157,7 +150,6 @@ export default {
       timeOutNum: undefined,
       list: [],
       isOpenScroll: false,
-      animate: false,
     };
   },
   watch: {
@@ -195,7 +187,7 @@ export default {
     setOpenScroll() {
       // 判断 内容 > 容器，则开启滚动
       this.isOpenScroll =
-        this.$refs.scrollTableListBox.offsetHeight > this.$refs.scrollTableList.offsetHeight;
+        this.$refs.scrollTableListBox.$el.offsetHeight > this.$refs.scrollTableList.offsetHeight;
     },
     fontSize(num) {
       return num * 100;
@@ -213,15 +205,14 @@ export default {
       if (this.list.length != 0) {
         this.clear();
         this.intNum = setInterval(() => {
-          this.animate = true; // 向上滚动的时候需要添加css3过渡动画
           this.timeOutNum = setTimeout(() => {
+            console.log(1);
             this.list.push(
               ...this.list.splice(0, this.trunCount).map((item) => ({
                 ...item,
                 diyKey: this.getRandomCount(),
               }))
             );
-            this.animate = false;
           }, 500);
         }, this.duration);
       }

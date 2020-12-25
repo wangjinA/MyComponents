@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-10-15 08:47:18
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-11-05 15:13:53
+ * @LastEditTime: 2020-12-01 11:24:45
  * @Description: 列表时间差动画
 -->
 <template>
@@ -12,7 +12,7 @@
     @after-enter="afterEnter"
     class="hyTransitionList"
     tag="div"
-    name="list"
+    :name="name"
     appear
   >
     <slot />
@@ -26,6 +26,10 @@ export default {
     delay: {
       type: Number,
       default: 0.1,
+    },
+    name: {
+      type: String,
+      default: "list",
     },
   },
   data() {

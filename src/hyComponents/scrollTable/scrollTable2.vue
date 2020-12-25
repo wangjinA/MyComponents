@@ -2,7 +2,7 @@
  * @Author: 汪锦
  * @Date: 2020-03-16 15:20:13
  * @LastEditors: 汪锦
- * @LastEditTime: 2020-07-28 10:07:49
+ * @LastEditTime: 2020-12-21 15:27:21
  * @Description: 滚动表格
  -->
 <template>
@@ -78,6 +78,10 @@
 export default {
   name: "scrollTable",
   props: {
+    company: {
+      type: String,
+      default: "px",
+    },
     // 表头行高
     headerLineHeight: {
       type: Number,
@@ -121,6 +125,16 @@ export default {
       // 间距
       type: Number,
       default: 20,
+    },
+    // 标题字体大小
+    titleFontSize: {
+      type: Number,
+      default: 18,
+    },
+    // 列表字体大小
+    listFontSize: {
+      type: Number,
+      default: 16,
     },
   },
   data() {
