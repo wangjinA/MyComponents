@@ -30,7 +30,7 @@ function isRes(res) {
 module.exports = {
   // 登录
   login({ userName, password }) {
-    let loginSql = `select * FROM  users WHERE user_name='${userName}' AND psd='${password}'`
+    let loginSql = `select * FROM  users WHERE userName='${userName}' AND psd='${password}'`
     return getConnection(loginSql)
   },
   // 注册
